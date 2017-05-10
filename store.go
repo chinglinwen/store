@@ -1,4 +1,4 @@
-// Store is for stroing arbitrary storing data.
+// Store is for storing arbitrary data.
 // It support oss now
 package store
 
