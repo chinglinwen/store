@@ -1,20 +1,9 @@
-package oss
+package diskv
 
 import (
 	"bytes"
-	"os"
 	"testing"
 )
-
-func TestMain(m *testing.M) {
-	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
-	key := "LTAIj8XauZDqhzLz"
-	secret := "0bvzEIzPktdVVmIVIGIeylGhUCLxil"
-	SetKeySecret(endpoint, key, secret)
-
-	// call flag.Parse() here if TestMain uses flags
-	os.Exit(m.Run())
-}
 
 func TestPutGet(t *testing.T) {
 	n := &Newer{}
@@ -22,7 +11,7 @@ func TestPutGet(t *testing.T) {
 	if err != nil {
 		t.Error("new client err:", err)
 	}
-	k, v := "hello", []byte("test")
+	k, v := "foldertest/hello", []byte("test")
 	err = s.Write(k, v)
 	if err != nil {
 		t.Error("write err:", err)

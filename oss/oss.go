@@ -7,7 +7,6 @@ package oss
 
 import (
 	"bytes"
-	"encoding/json"
 	"io/ioutil"
 	"strings"
 
@@ -62,10 +61,6 @@ func (s *S) WriteString(key, value string) error {
 	return s.Bucket.PutObject(key, strings.NewReader(value))
 }
 
-//func (s *S) WriteR(key string,r io.Reader) error {
-//	return s.bucket.PutObject(key, r)
-//}
-
 // Read read bytes from oss.
 func (s *S) Read(key string) ([]byte, error) {
 	body, err := s.Bucket.GetObject(key)
@@ -74,17 +69,6 @@ func (s *S) Read(key string) ([]byte, error) {
 	}
 	defer body.Close()
 	return ioutil.ReadAll(body)
-}
-
-func AppendItem(result []byte, key string, value interface{}) (newresult []byte, err error) {
-	var m map[string]interface{}
-	err = json.Unmarshal(result, &m)
-	if err != nil {
-		return
-	}
-	m[key] = value
-	newresult, err = json.Marshal(m)
-	return
 }
 
 func init() {
