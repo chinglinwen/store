@@ -1,4 +1,8 @@
-// Store backend for oss ( Aliyun Object Storage Service)
+// Store backend for oss (Aliyun Object Storage Service).
+// It comes with default key and secret (it can be init again).
+//
+// Using this as the backend of store package,
+// If for registering backend only (it can import as blank identifier).
 package oss
 
 import (
@@ -7,6 +11,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"g.haodai.com/golang/common/store"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
@@ -17,7 +22,7 @@ var (
 )
 
 // SetClient will set the default client
-// A helper function for initialization
+// A helper function for initialization.
 func SetKeySecret(e, k, sec string) {
 	endpoint = e
 	apikey = k
@@ -29,12 +34,14 @@ type S struct {
 	Bucket     *oss.Bucket
 }
 
-// Provide the client for convience
+// Provide the client for convience.
 func GetClient() (*oss.Client, error) {
 	return oss.New(endpoint, apikey, secret)
 }
 
-func New(bucket string) (s S, err error) {
+type Newer struct{}
+
+func (*Newer) New(bucket string) (s store.Store, err error) {
 	c, err := GetClient()
 	if err != nil {
 		return
@@ -43,10 +50,10 @@ func New(bucket string) (s S, err error) {
 	if err != nil {
 		return
 	}
-	return S{bucket, b}, nil
+	return &S{bucket, b}, nil
 }
 
-// Write write any bytes to oss
+// Write write any bytes to oss.
 func (s *S) Write(key string, value []byte) error {
 	return s.Bucket.PutObject(key, bytes.NewReader(value))
 }
@@ -59,7 +66,7 @@ func (s *S) WriteString(key, value string) error {
 //	return s.bucket.PutObject(key, r)
 //}
 
-// Read read bytes from oss
+// Read read bytes from oss.
 func (s *S) Read(key string) ([]byte, error) {
 	body, err := s.Bucket.GetObject(key)
 	if err != nil {
@@ -78,4 +85,17 @@ func AppendItem(result []byte, key string, value interface{}) (newresult []byte,
 	m[key] = value
 	newresult, err = json.Marshal(m)
 	return
+}
+
+func init() {
+	store.Register("oss", &Newer{})
+}
+
+func init() {
+	// Set a default for convenience.
+	// It can be set again in somewhere else too.
+	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
+	key := "LTAIj8XauZDqhzLz"
+	secret := "0bvzEIzPktdVVmIVIGIeylGhUCLxil"
+	SetKeySecret(endpoint, key, secret)
 }
