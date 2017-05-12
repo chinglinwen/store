@@ -3,7 +3,6 @@
 package store
 
 import (
-	"encoding/json"
 	"sync"
 )
 
@@ -21,8 +20,9 @@ type Backend interface {
 }
 
 type Store struct {
-	B Backend
-	C Compression
+	B            Backend
+	C            Compression
+	noDecompress bool
 }
 
 func (s *Store) Write(key string, value []byte) (err error) {
@@ -40,21 +40,30 @@ func (s *Store) Read(key string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if s.C != nil {
+	if s.C != nil && !s.noDecompress {
 		return s.C.Decompress(v)
 	}
 	return v, err
 }
 
+// A option function for no decompress
+func NoDecompress(s *Store) {
+	s.noDecompress = true
+}
+
 // Create a new store for read and write,
 // Backend is one of registered backends.
-func New(backend, bucket string) (*Store, error) {
+func New(backend, bucket string, options ...func(*Store)) (*Store, error) {
 	c := NewGzipCompression()
-	s, err := backends[backend].New(bucket)
+	b, err := backends[backend].New(bucket)
 	if err != nil {
 		return nil, err
 	}
-	return &Store{s, c}, nil
+	s := &Store{B: b, C: c}
+	for _, option := range options {
+		option(s)
+	}
+	return s, nil
 }
 
 type Newer interface {
@@ -77,15 +86,4 @@ func Register(name string, n Newer) {
 		panic("store: Register called twice for Newer " + name)
 	}
 	backends[name] = n
-}
-
-func AppendItem(result []byte, key string, value interface{}) (newresult []byte, err error) {
-	var m map[string]interface{}
-	err = json.Unmarshal(result, &m)
-	if err != nil {
-		return
-	}
-	m[key] = value
-	newresult, err = json.Marshal(m)
-	return
 }

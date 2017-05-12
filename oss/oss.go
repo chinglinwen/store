@@ -73,7 +73,7 @@ func init() {
 	// Set a default for convenience.
 	// It can be set again in somewhere else too.
 	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
-	key := "LTAIj8XauZDqhzLz"
-	secret := "0bvzEIzPktdVVmIVIGIeylGhUCLxil"
+	key := "LTAIiJAOgdjxTITy"
+	secret := "KMHRfsN7nyC74HGBvp2M5xSSjuVhym"
 	SetKeySecret(endpoint, key, secret)
 }
