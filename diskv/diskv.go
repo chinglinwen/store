@@ -35,10 +35,6 @@ func (d *D) Write(key string, value []byte) (err error) {
 	return d.Disk.Write(key, value)
 }
 
-func (d *D) WriteString(key, value string) error {
-	return d.Disk.Write(key, []byte(value))
-}
-
 // Read read bytes from diskv.
 func (d *D) Read(key string) ([]byte, error) {
 	b, err := d.Disk.Read(key)

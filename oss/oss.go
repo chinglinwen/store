@@ -62,10 +62,6 @@ func (s *S) Write(key string, value []byte) (err error) {
 	return s.Bucket.PutObject(key, bytes.NewReader(value))
 }
 
-func (s *S) WriteString(key, value string) error {
-	return s.Write(key, []byte(value))
-}
-
 // Read read bytes from oss.
 func (s *S) Read(key string) ([]byte, error) {
 	body, err := s.Bucket.GetObject(key)
