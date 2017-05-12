@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"os"
 	"testing"
+
+	"g.haodai.com/golang/common/store"
 )
 
 func TestMain(m *testing.M) {
@@ -18,7 +20,7 @@ func TestMain(m *testing.M) {
 
 func TestPutGet(t *testing.T) {
 	n := &Newer{}
-	s, err := n.New("bigprove-dev")
+	s, err := n.New(&store.Options{"bigprove-dev", store.NewGzipCompression()})
 	if err != nil {
 		t.Error("new client err:", err)
 	}

@@ -8,7 +8,6 @@ package oss
 import (
 	"bytes"
 	"io/ioutil"
-	"strings"
 
 	"g.haodai.com/golang/common/store"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -29,8 +28,8 @@ func SetKeySecret(e, k, sec string) {
 }
 
 type S struct {
-	BucketName string
-	Bucket     *oss.Bucket
+	Bucket *oss.Bucket
+	*store.Options
 }
 
 // Provide the client for convience.
@@ -40,25 +39,31 @@ func GetClient() (*oss.Client, error) {
 
 type Newer struct{}
 
-func (*Newer) New(bucket string) (s store.Store, err error) {
+func (*Newer) New(option *store.Options) (s store.Store, err error) {
 	c, err := GetClient()
 	if err != nil {
 		return
 	}
-	b, err := c.Bucket(bucket)
+	b, err := c.Bucket(option.BucketName)
 	if err != nil {
 		return
 	}
-	return &S{bucket, b}, nil
+	return &S{b, option}, nil
 }
 
 // Write write any bytes to oss.
-func (s *S) Write(key string, value []byte) error {
+func (s *S) Write(key string, value []byte) (err error) {
+	if s.Compression != nil {
+		value, err = s.Compression.Compress(value)
+		if err != nil {
+			return err
+		}
+	}
 	return s.Bucket.PutObject(key, bytes.NewReader(value))
 }
 
 func (s *S) WriteString(key, value string) error {
-	return s.Bucket.PutObject(key, strings.NewReader(value))
+	return s.Write(key, []byte(value))
 }
 
 // Read read bytes from oss.
@@ -68,7 +73,14 @@ func (s *S) Read(key string) ([]byte, error) {
 		return nil, err
 	}
 	defer body.Close()
-	return ioutil.ReadAll(body)
+	b, err := ioutil.ReadAll(body)
+	if err != nil {
+		return nil, err
+	}
+	if s.Compression != nil {
+		return s.Compression.Decompress(b)
+	}
+	return b, err
 }
 
 func init() {

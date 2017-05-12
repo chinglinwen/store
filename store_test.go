@@ -1,7 +1,7 @@
 package store_test
 
 import (
-	"fmt"
+	"bytes"
 	"testing"
 
 	"g.haodai.com/golang/common/store"
@@ -18,30 +18,21 @@ func Test(t *testing.T) {
 		{"diskv", "bigprove-dev"},
 	}
 	for _, test := range tests {
-		err := readwrite(test.backend, test.bucket)
+		s, err := store.New(test.backend, test.bucket)
 		if err != nil {
-			fmt.Print(err)
+			t.Errorf("new store err: %v", err)
+		}
+		k, v := "hello.txt", []byte("test")
+		if err := s.Write(k, v); err != nil {
+			t.Errorf("write err: %v", err)
+		}
+		b, err := s.Read(k)
+		if err != nil {
+			t.Errorf("read err: %v", err)
+		}
+		if !bytes.Equal(b, v) {
+			t.Errorf("read and write not equal err: %v", err)
 		}
 	}
-	fmt.Print("everything ok")
-}
-
-func readwrite(backend, bucket string) error {
-	s, err := store.New(backend, bucket)
-	if err != nil {
-		return fmt.Errorf("new store err: %v", err)
-	}
-
-	// Folder need to create at the console first
-	// Any path will be okay, the path must exist
-	k, v := "hello", []byte("test")
-	if err := s.Write(k, v); err != nil {
-		return fmt.Errorf("write err: %v", err)
-	}
-
-	_, err = s.Read(k)
-	if err != nil {
-		return fmt.Errorf("read err: %v", err)
-	}
-	return nil
+	t.Log("everything ok")
 }

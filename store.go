@@ -2,7 +2,10 @@
 // It support oss as backend for now.
 package store
 
-import "sync"
+import (
+	"encoding/json"
+	"sync"
+)
 
 type Reader interface {
 	Read(key string) ([]byte, error)
@@ -20,11 +23,17 @@ type Store interface {
 // Create a new store for read and write,
 // Backend is one of registered backends.
 func New(backend, bucket string) (Store, error) {
-	return backends[backend].New(bucket)
+	c := NewGzipCompression()
+	return backends[backend].New(&Options{bucket, c})
 }
 
 type Newer interface {
-	New(string) (Store, error)
+	New(*Options) (Store, error)
+}
+
+type Options struct {
+	BucketName  string
+	Compression Compression
 }
 
 var (
@@ -43,4 +52,15 @@ func Register(name string, n Newer) {
 		panic("store: Register called twice for Newer " + name)
 	}
 	backends[name] = n
+}
+
+func AppendItem(result []byte, key string, value interface{}) (newresult []byte, err error) {
+	var m map[string]interface{}
+	err = json.Unmarshal(result, &m)
+	if err != nil {
+		return
+	}
+	m[key] = value
+	newresult, err = json.Marshal(m)
+	return
 }
