@@ -13,9 +13,9 @@ type D struct {
 	Disk *diskv.Diskv
 }
 
-type Newer struct{}
+type newer struct{}
 
-func (*Newer) New(path string) (s store.Store, err error) {
+func (*newer) New(path string) (s store.Backend, err error) {
 	d := diskv.New(diskv.Options{
 		BasePath:     path,
 		CacheSizeMax: 1024 * 1024,
@@ -34,5 +34,5 @@ func (d *D) Read(key string) ([]byte, error) {
 }
 
 func init() {
-	store.Register("diskv", &Newer{})
+	store.Register("diskv", &newer{})
 }

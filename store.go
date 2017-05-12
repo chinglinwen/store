@@ -15,50 +15,50 @@ type Writer interface {
 	Write(key string, value []byte) error
 }
 
-type Store interface {
+type Backend interface {
 	Reader
 	Writer
 }
 
-type store struct {
-	rw Store
-	c  Compression
+type Store struct {
+	B Backend
+	C Compression
 }
 
-func (s *store) Write(key string, value []byte) (err error) {
-	if s.c != nil {
-		value, err = s.c.Compress(value)
+func (s *Store) Write(key string, value []byte) (err error) {
+	if s.C != nil {
+		value, err = s.C.Compress(value)
 		if err != nil {
 			return err
 		}
 	}
-	return s.rw.Write(key, value)
+	return s.B.Write(key, value)
 }
 
-func (s *store) Read(key string) ([]byte, error) {
-	v, err := s.rw.Read(key)
+func (s *Store) Read(key string) ([]byte, error) {
+	v, err := s.B.Read(key)
 	if err != nil {
 		return nil, err
 	}
-	if s.c != nil {
-		return s.c.Decompress(v)
+	if s.C != nil {
+		return s.C.Decompress(v)
 	}
 	return v, err
 }
 
 // Create a new store for read and write,
 // Backend is one of registered backends.
-func New(backend, bucket string) (Store, error) {
+func New(backend, bucket string) (*Store, error) {
 	c := NewGzipCompression()
 	s, err := backends[backend].New(bucket)
 	if err != nil {
 		return nil, err
 	}
-	return &store{s, c}, nil
+	return &Store{s, c}, nil
 }
 
 type Newer interface {
-	New(string) (Store, error)
+	New(string) (Backend, error)
 }
 
 var (

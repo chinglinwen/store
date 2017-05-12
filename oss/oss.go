@@ -36,9 +36,9 @@ func GetClient() (*oss.Client, error) {
 	return oss.New(endpoint, apikey, secret)
 }
 
-type Newer struct{}
+type newer struct{}
 
-func (*Newer) New(bucket string) (s store.Store, err error) {
+func (*newer) New(bucket string) (s store.Backend, err error) {
 	c, err := GetClient()
 	if err != nil {
 		return
@@ -66,7 +66,7 @@ func (s *S) Read(key string) ([]byte, error) {
 }
 
 func init() {
-	store.Register("oss", &Newer{})
+	store.Register("oss", &newer{})
 }
 
 func init() {

@@ -6,7 +6,7 @@ import (
 )
 
 func TestPutGet(t *testing.T) {
-	n := &Newer{}
+	n := &newer{}
 	s, err := n.New("bigprove-dev")
 	if err != nil {
 		t.Error("new client err:", err)
