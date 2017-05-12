@@ -28,8 +28,7 @@ func SetKeySecret(e, k, sec string) {
 }
 
 type S struct {
-	Bucket *oss.Bucket
-	*store.Options
+	*oss.Bucket
 }
 
 // Provide the client for convience.
@@ -39,44 +38,31 @@ func GetClient() (*oss.Client, error) {
 
 type Newer struct{}
 
-func (*Newer) New(option *store.Options) (s store.Store, err error) {
+func (*Newer) New(bucket string) (s store.Store, err error) {
 	c, err := GetClient()
 	if err != nil {
 		return
 	}
-	b, err := c.Bucket(option.BucketName)
+	b, err := c.Bucket(bucket)
 	if err != nil {
 		return
 	}
-	return &S{b, option}, nil
+	return &S{b}, nil
 }
 
 // Write write any bytes to oss.
 func (s *S) Write(key string, value []byte) (err error) {
-	if s.Compression != nil {
-		value, err = s.Compression.Compress(value)
-		if err != nil {
-			return err
-		}
-	}
-	return s.Bucket.PutObject(key, bytes.NewReader(value))
+	return s.PutObject(key, bytes.NewReader(value))
 }
 
 // Read read bytes from oss.
 func (s *S) Read(key string) ([]byte, error) {
-	body, err := s.Bucket.GetObject(key)
+	body, err := s.GetObject(key)
 	if err != nil {
 		return nil, err
 	}
 	defer body.Close()
-	b, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-	if s.Compression != nil {
-		return s.Compression.Decompress(b)
-	}
-	return b, err
+	return ioutil.ReadAll(body)
 }
 
 func init() {

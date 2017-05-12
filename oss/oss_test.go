@@ -2,25 +2,12 @@ package oss
 
 import (
 	"bytes"
-	"os"
 	"testing"
-
-	"g.haodai.com/golang/common/store"
 )
-
-func TestMain(m *testing.M) {
-	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
-	key := "LTAIj8XauZDqhzLz"
-	secret := "0bvzEIzPktdVVmIVIGIeylGhUCLxil"
-	SetKeySecret(endpoint, key, secret)
-
-	// call flag.Parse() here if TestMain uses flags
-	os.Exit(m.Run())
-}
 
 func TestPutGet(t *testing.T) {
 	n := &Newer{}
-	s, err := n.New(&store.Options{"bigprove-dev", store.NewGzipCompression()})
+	s, err := n.New("bigprove-dev")
 	if err != nil {
 		t.Error("new client err:", err)
 	}

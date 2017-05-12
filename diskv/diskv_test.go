@@ -3,13 +3,11 @@ package diskv
 import (
 	"bytes"
 	"testing"
-
-	"g.haodai.com/golang/common/store"
 )
 
 func TestPutGet(t *testing.T) {
 	n := &Newer{}
-	s, err := n.New(&store.Options{"bigprove-dev", store.NewGzipCompression()})
+	s, err := n.New("bigprove-dev")
 	if err != nil {
 		t.Error("new client err:", err)
 	}
