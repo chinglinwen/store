@@ -68,12 +68,3 @@ func (s *S) Read(key string) ([]byte, error) {
 func init() {
 	store.Register("oss", &newer{})
 }
-
-func init() {
-	// Set a default for convenience.
-	// It can be set again in somewhere else too.
-	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
-	key := "LTAIiJAOgdjxTITy"
-	secret := "KMHRfsN7nyC74HGBvp2M5xSSjuVhym"
-	SetKeySecret(endpoint, key, secret)
-}

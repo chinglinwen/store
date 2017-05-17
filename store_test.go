@@ -58,3 +58,16 @@ func TestNoDecompress(t *testing.T) {
 		t.Errorf("read and write not equal err: %v", err)
 	}
 }
+
+func TestRead(t *testing.T) {
+	s, err := store.New("oss", "bigprove-dev")
+	if err != nil {
+		t.Errorf("new store err: %v", err)
+	}
+	k := "mobilev2/18801342613/haodai/data_20170516.json.gz"
+	b, err := s.Read(k)
+	if err != nil {
+		t.Log("read err: %v", err)
+	}
+	t.Log(string(b))
+}
