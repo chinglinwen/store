@@ -5,9 +5,11 @@ import (
 	"testing"
 )
 
+var bucket string
+
 func TestPutGet(t *testing.T) {
 	n := &newer{}
-	s, err := n.New("bigprove-dev")
+	s, err := n.New(bucket)
 	if err != nil {
 		t.Error("new client err:", err)
 	}
@@ -24,3 +26,27 @@ func TestPutGet(t *testing.T) {
 		t.Errorf("read error, got %v, want %v\n", string(b), string(v))
 	}
 }
+
+//dev
+func init() {
+	// Set a default for convenience.
+	// It can be set again in somewhere else too.
+	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
+	key := "LTAIiJAOgdjxTITy"
+	secret := "KMHRfsN7nyC74HGBvp2M5xSSjuVhym"
+	SetKeySecret(endpoint, key, secret)
+
+	bucket = "bigprove-dev"
+}
+
+//prod
+//func init() {
+//	// Set a default for convenience.
+//	// It can be set again in somewhere else too.
+//	endpoint := "http://oss-cn-beijing.aliyuncs.com"
+//	key := "LTAISUxhvSHiM12a"
+//	secret := "TQfIUpiuSQJeeBEL5LMsY81mLLK4NN"
+//	SetKeySecret(endpoint, key, secret)
+//
+//	bucket="prove"
+//}
