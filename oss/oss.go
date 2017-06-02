@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"io/ioutil"
 
-	"g.haodai.com/golang/common/store"
+	"hdgit.com/golang/common/store"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 

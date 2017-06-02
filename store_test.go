@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"g.haodai.com/golang/common/store"
-	_ "g.haodai.com/golang/common/store/diskv"
-	_ "g.haodai.com/golang/common/store/oss"
+	"hdgit.com/golang/common/store"
+	_ "hdgit.com/golang/common/store/diskv"
+	_ "hdgit.com/golang/common/store/oss"
 )
 
 func Test(t *testing.T) {

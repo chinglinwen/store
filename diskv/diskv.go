@@ -5,7 +5,7 @@
 package diskv
 
 import (
-	"g.haodai.com/golang/common/store"
+	"hdgit.com/golang/common/store"
 	"github.com/peterbourgon/diskv"
 )
 
