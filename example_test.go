@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"hdgit.com/golib/store"
-	_ "hdgit.com/golib/store/oss"
+	oss "hdgit.com/golib/store/oss"
 )
 
 func Example() {
@@ -13,7 +13,7 @@ func Example() {
 	//	_ "hdgit.com/golib/store/oss"
 	// )
 
-	s, err := store.New("oss", "bigprove-dev")
+	s, err := store.New("oss", bucket)
 	if err != nil {
 		fmt.Print("new store err:", err)
 		return
@@ -36,4 +36,18 @@ func Example() {
 
 	// Output:
 	// everything ok, result:test
+}
+
+var bucket string
+
+//dev
+func init() {
+	// Set a default for convenience.
+	// It can be set again in somewhere else too.
+	endpoint := "http://oss-cn-beijing.aliyuncs.com"
+	key := "LTAISUxhvSHiM12a"
+	secret := "TQfIUpiuSQJeeBEL5LMsY81mLLK4NN"
+	oss.SetKeySecret(endpoint, key, secret)
+
+	bucket = "prove-dev"
 }

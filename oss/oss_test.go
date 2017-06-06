@@ -31,12 +31,12 @@ func TestPutGet(t *testing.T) {
 func init() {
 	// Set a default for convenience.
 	// It can be set again in somewhere else too.
-	endpoint := "http://oss-cn-zhangjiakou.aliyuncs.com"
-	key := "LTAIiJAOgdjxTITy"
-	secret := "KMHRfsN7nyC74HGBvp2M5xSSjuVhym"
+	endpoint := "http://oss-cn-beijing.aliyuncs.com"
+	key := "LTAISUxhvSHiM12a"
+	secret := "TQfIUpiuSQJeeBEL5LMsY81mLLK4NN"
 	SetKeySecret(endpoint, key, secret)
 
-	bucket = "bigprove-dev"
+	bucket = "prove-dev"
 }
 
 //prod

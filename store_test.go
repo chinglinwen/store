@@ -14,8 +14,8 @@ func Test(t *testing.T) {
 		backend string
 		bucket  string
 	}{
-		{"oss", "bigprove-dev"},
-		{"diskv", "bigprove-dev"},
+		{"oss", "prove-dev"},
+		{"diskv", "prove-dev"},
 	}
 	for _, test := range tests {
 		s, err := store.New(test.backend, test.bucket)
@@ -38,7 +38,7 @@ func Test(t *testing.T) {
 }
 
 func TestNoDecompress(t *testing.T) {
-	s, err := store.New("oss", "bigprove-dev", store.NoDecompress)
+	s, err := store.New("oss", "prove-dev", store.NoDecompress)
 	if err != nil {
 		t.Errorf("new store err: %v", err)
 	}
@@ -59,15 +59,15 @@ func TestNoDecompress(t *testing.T) {
 	}
 }
 
-func TestRead(t *testing.T) {
-	s, err := store.New("oss", "bigprove-dev")
-	if err != nil {
-		t.Errorf("new store err: %v", err)
-	}
-	k := "mobilev2/18801342613/haodai/data_20170516.json.gz"
-	b, err := s.Read(k)
-	if err != nil {
-		t.Log("read err: %v", err)
-	}
-	t.Log(string(b))
-}
+//func TestRead(t *testing.T) {
+//	s, err := store.New("oss", "prove-dev")
+//	if err != nil {
+//		t.Errorf("new store err: %v", err)
+//	}
+//	k := "mobilev2/18801342613/haodai/data_20170516.json.gz"
+//	b, err := s.Read(k)
+//	if err != nil {
+//		t.Log("read err: %v", err)
+//	}
+//	t.Log(string(b))
+//}
