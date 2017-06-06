@@ -3,14 +3,14 @@ package store_test
 import (
 	"fmt"
 
-	"hdgit.com/golang/common/store"
-	_ "hdgit.com/golang/common/store/oss"
+	"hdgit.com/golib/store"
+	_ "hdgit.com/golib/store/oss"
 )
 
 func Example() {
 	// import (
-	//	"hdgit.com/golang/common/store"
-	//	_ "hdgit.com/golang/common/store/oss"
+	//	"hdgit.com/golib/store"
+	//	_ "hdgit.com/golib/store/oss"
 	// )
 
 	s, err := store.New("oss", "bigprove-dev")
