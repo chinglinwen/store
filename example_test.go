@@ -13,6 +13,7 @@ func Example() {
 	//	_ "hdgit.com/golib/store/oss"
 	// )
 
+	// Can be no compress by adding a option here.
 	s, err := store.New("oss", bucket)
 	if err != nil {
 		fmt.Print("new store err:", err)

@@ -27,7 +27,6 @@ type genericCompression struct {
 
 func (g *genericCompression) Compress(dst []byte) ([]byte, error) {
 	return g.cf(dst)
-
 }
 
 func (g *genericCompression) Decompress(src []byte) ([]byte, error) {

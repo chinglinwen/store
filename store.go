@@ -23,6 +23,7 @@ type Store struct {
 	B            Backend
 	C            Compression
 	noDecompress bool
+	noCompress   bool
 }
 
 func (s *Store) Write(key string, value []byte) (err error) {
@@ -51,17 +52,24 @@ func NoDecompress(s *Store) {
 	s.noDecompress = true
 }
 
+// A option function for no compress
+func NoCompress(s *Store) {
+	s.noCompress = true
+}
+
 // Create a new store for read and write,
 // Backend is one of registered backends.
 func New(backend, bucket string, options ...func(*Store)) (*Store, error) {
-	c := NewGzipCompression()
 	b, err := backends[backend].New(bucket)
 	if err != nil {
 		return nil, err
 	}
-	s := &Store{B: b, C: c}
+	s := &Store{B: b}
 	for _, option := range options {
 		option(s)
+	}
+	if !s.noCompress {
+		s.C = NewGzipCompression() //default
 	}
 	return s, nil
 }

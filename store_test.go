@@ -11,14 +11,23 @@ import (
 
 func Test(t *testing.T) {
 	tests := []struct {
-		backend string
-		bucket  string
+		backend  string
+		bucket   string
+		compress bool
 	}{
-		{"oss", "prove-dev"},
-		{"diskv", "prove-dev"},
+		{"oss", "prove-dev", true},
+		{"diskv", "prove-dev", true},
+		{"oss", "prove-dev", false},
+		{"diskv", "prove-dev", false},
 	}
 	for _, test := range tests {
-		s, err := store.New(test.backend, test.bucket)
+		var s *store.Store
+		var err error
+		if test.compress {
+			s, err = store.New(test.backend, test.bucket)
+		} else {
+			s, err = store.New(test.backend, test.bucket, store.NoCompress)
+		}
 		if err != nil {
 			t.Errorf("new store err: %v", err)
 		}
