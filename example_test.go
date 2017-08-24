@@ -46,9 +46,9 @@ func init() {
 	// Set a default for convenience.
 	// It can be set again in somewhere else too.
 	endpoint := "http://oss-cn-beijing.aliyuncs.com"
-	key := "LTAISUxhvSHiM12a"
-	secret := "TQfIUpiuSQJeeBEL5LMsY81mLLK4NN"
+	key := "xxx"
+	secret := "xxx"
 	oss.SetKeySecret(endpoint, key, secret)
 
-	bucket = "prove-dev"
+	bucket = "xxx"
 }
