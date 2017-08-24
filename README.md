@@ -4,11 +4,6 @@ store （包含多个后端，如 oss,diskv）
 
 ## Example
 
-	// import (
-	//	"hdgit.com/golib/store"
-	//	_ "hdgit.com/golib/store/oss"
-	// )
-
 	// Can be no compress by adding a option here.
 	s, err := store.New("oss", bucket)
 	if err != nil {
